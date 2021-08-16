@@ -10,21 +10,30 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 
 class AccueilActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+
+    fun demarreQuizz(view: View){
+        val QuizzIntent = Intent(this,QuizzActivity::class.java)
+        startActivity(QuizzIntent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_accueil)
         val btDeconnexion = findViewById<Button>(R.id.BTDeconnexion)
         val tvEmail = findViewById<TextView>(R.id.TVEmail)
         val tvVerifMail = findViewById<TextView>(R.id.TVVerifmail)
-
         val btVerifEmail = findViewById<Button>(R.id.BTVerifMail)
+
         auth = Firebase.auth
         val user = auth.currentUser
+        val token = FirebaseMessaging.getInstance().token
 
-        tvEmail.text = user?.email
+        tvEmail.text = token.toString()
+
 
         if (user!!.isEmailVerified) {
             tvVerifMail.visibility = View.GONE
@@ -38,7 +47,7 @@ class AccueilActivity : AppCompatActivity() {
         }
 
         btVerifEmail.setOnClickListener {
-            user!!.sendEmailVerification()
+            user.sendEmailVerification()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(

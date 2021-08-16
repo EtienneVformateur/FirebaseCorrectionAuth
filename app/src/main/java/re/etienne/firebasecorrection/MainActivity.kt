@@ -6,9 +6,12 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.iid.FirebaseInstanceIdReceiver
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -62,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         if(currentUser != null){
             val AccueilIntent = Intent(this,AccueilActivity::class.java)
             startActivity(AccueilIntent)
+
         }
     }
 }
