@@ -2,6 +2,7 @@ package re.etienne.firebasecorrection
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -103,6 +104,8 @@ class QuizzActivity : AppCompatActivity() {
                     listQuestion.add(Q)
                 }
                 chargeQuestion(listQuestion[q_encours])
+                binding.LQLoading.visibility = View.GONE
+                binding.LQQuestion.visibility = View.VISIBLE
 
             }
 
