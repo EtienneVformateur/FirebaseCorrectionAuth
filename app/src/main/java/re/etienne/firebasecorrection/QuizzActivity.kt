@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -17,10 +19,13 @@ import java.util.ArrayList
 
 class QuizzActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
+    private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityQuizzBinding
     var cpt = 0 // Compteur de bonne réponse
     var listQuestion = arrayListOf<Question>()
     var q_encours = 0 //Index de la question en cours dans listQuestion de 0 à listQuestion.size = au nombre de questions
+
+
 
     class Question(
         val Enonce: String,
@@ -30,7 +35,7 @@ class QuizzActivity : AppCompatActivity() {
 
     class Score(
 //        val username: String,
-        val userId: String, // Identifiant unique de l'user connecté
+//        val userId: String, // Identifiant unique de l'user connecté
         val score: Int //Le compteur de bonne réponse va être stocker dans cette variable
     )
 
@@ -55,6 +60,18 @@ class QuizzActivity : AppCompatActivity() {
         //Sinon si toutes les questions ont été posées j'affiche une alerte pour recommencer
         // Et je stocke le score en ligne
         else {
+            val currentUser = auth.currentUser
+            val userId = currentUser!!.uid
+            val NewScore = Score(cpt)
+
+            //ecriture des données en ligne
+            val RefScore = database.child("Scores").child(userId)
+            RefScore.child("score").get().addOnSuccessListener {
+                if (it.value.toString().toInt() < cpt ){
+                    RefScore.setValue(NewScore)
+                }
+            }
+
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Rejouer ? ! ")
             builder.setCancelable(false) // Oblige le clique sur un bouton
@@ -87,6 +104,7 @@ class QuizzActivity : AppCompatActivity() {
         setContentView(view)
         val tvCpt = findViewById<TextView>(R.id.tvCpt)
         tvCpt.text = ""
+        auth = Firebase.auth
 
         //Connexion à la base de donnée Firebase
         database = Firebase.database("https://fir-correction-default-rtdb.europe-west1.firebasedatabase.app/").reference
@@ -104,6 +122,7 @@ class QuizzActivity : AppCompatActivity() {
                     listQuestion.add(Q)
                 }
                 chargeQuestion(listQuestion[q_encours])
+                //Disparition écran de chargement et apparition des questions
                 binding.LQLoading.visibility = View.GONE
                 binding.LQQuestion.visibility = View.VISIBLE
 
