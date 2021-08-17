@@ -3,6 +3,7 @@ package re.etienne.firebasecorrection
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -68,9 +69,9 @@ class QuizzActivity : AppCompatActivity() {
             val RefScore = database.child("Scores").child(userId)
             RefScore.child("score").get().addOnSuccessListener {
                 if (it.value != null){
-                     if (it.value.toString().toInt() < cpt) {
-                         RefScore.setValue(NewScore)
-                     }
+                    if (it.value.toString().toInt() < cpt) {
+                        RefScore.setValue(NewScore)
+                    }
                 }
                 else{
                     RefScore.setValue(NewScore)
@@ -91,15 +92,16 @@ class QuizzActivity : AppCompatActivity() {
     }
     fun chargeQuestion(q:Question){
         binding.tvQuestion.text = q.Enonce
-        binding.btR1.text = q.Reponse[0]
-        binding.btR2.text = q.Reponse[1]
-        binding.btR3.text = q.Reponse[2]
-//        binding.btR4.text = q.Reponse[3]
+        binding.LQQuestion.removeAllViews()
+        binding.LQQuestion.addView(binding.tvQuestion)
 
-        binding.btR1.setOnClickListener { toastcpt(binding.btR1.text == q.Reponse[q.bonnereponse] ) }
-        binding.btR2.setOnClickListener { toastcpt(binding.btR2.text == q.Reponse[q.bonnereponse] ) }
-        binding.btR3.setOnClickListener { toastcpt(binding.btR3.text == q.Reponse[q.bonnereponse] ) }
-//        binding.btR4.setOnClickListener { toastcpt(binding.btR4.text == q.Reponse[q.bonnereponse] ) }
+        for (i in q.Reponse.indices) {
+            val bt = Button(this)
+            bt.text = q.Reponse[i]
+            bt.setOnClickListener { toastcpt(bt.text == q.Reponse[q.bonnereponse-1]) }
+            binding.LQQuestion.addView(bt)
+        }
+        binding.LQQuestion.addView(binding.tvCpt)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,7 +110,7 @@ class QuizzActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         val tvCpt = findViewById<TextView>(R.id.tvCpt)
-        tvCpt.text = ""
+        tvCpt.text = "0"
         auth = Firebase.auth
 
         //Connexion à la base de donnée Firebase
@@ -126,6 +128,7 @@ class QuizzActivity : AppCompatActivity() {
                         TableauReponse,question.child("BonneReponse").value.toString().toInt())
                     listQuestion.add(Q)
                 }
+                cpt = 0
                 chargeQuestion(listQuestion[q_encours])
                 //Disparition écran de chargement et apparition des questions
                 binding.LQLoading.visibility = View.GONE
@@ -137,7 +140,7 @@ class QuizzActivity : AppCompatActivity() {
                 TODO("Not yet implemented")
             }
         }
-            )
+        )
 
     }
 }
