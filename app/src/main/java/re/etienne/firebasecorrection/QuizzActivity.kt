@@ -17,16 +17,24 @@ import java.util.ArrayList
 class QuizzActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var binding: ActivityQuizzBinding
-    var cpt = 0
+    var cpt = 0 // Compteur de bonne réponse
     var listQuestion = arrayListOf<Question>()
-    var q_encours = 0
+    var q_encours = 0 //Index de la question en cours dans listQuestion de 0 à listQuestion.size = au nombre de questions
 
     class Question(
         val Enonce: String,
         val Reponse: ArrayList<String>,
         var bonnereponse: Int,
     )
+
+    class Score(
+//        val username: String,
+        val userId: String, // Identifiant unique de l'user connecté
+        val score: Int //Le compteur de bonne réponse va être stocker dans cette variable
+    )
+
     fun toastcpt(reponse: Boolean){
+        //Si c'est une bonne réponse alors j'incrémenteur le compteur de bonne réponse
         if(reponse){
             Toast.makeText(this,
                 "Bonne reponse", Toast.LENGTH_SHORT).show()
@@ -37,11 +45,14 @@ class QuizzActivity : AppCompatActivity() {
             Toast.makeText(this,
                 "Mauvaise reponse", Toast.LENGTH_SHORT).show()
         }
+        //Je change de question si ce n'est pas la derniere question
         q_encours ++
         if (q_encours<listQuestion.size)
         {
             chargeQuestion(listQuestion[q_encours])
         }
+        //Sinon si toutes les questions ont été posées j'affiche une alerte pour recommencer
+        // Et je stocke le score en ligne
         else {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Rejouer ? ! ")
@@ -49,6 +60,7 @@ class QuizzActivity : AppCompatActivity() {
             builder.setPositiveButton("Oui") { dialog, which ->
                 q_encours = 0
                 cpt = 0
+                binding.tvCpt.text = cpt.toString()
                 chargeQuestion(listQuestion[q_encours])
             }
             builder.show()
@@ -72,16 +84,12 @@ class QuizzActivity : AppCompatActivity() {
         binding = ActivityQuizzBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
-
         val tvCpt = findViewById<TextView>(R.id.tvCpt)
-        database = Firebase.database("https://fir-correction-default-rtdb.europe-west1.firebasedatabase.app/").reference
-
-
-
-
-
         tvCpt.text = ""
+
+        //Connexion à la base de donnée Firebase
+        database = Firebase.database("https://fir-correction-default-rtdb.europe-west1.firebasedatabase.app/").reference
+        //Chargement de la liste des questions en ligne
         val listeQuestionReference = database.child("ListeQuestion")
         listeQuestionReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(listequestion: DataSnapshot) {
