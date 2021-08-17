@@ -67,7 +67,12 @@ class QuizzActivity : AppCompatActivity() {
             //ecriture des données en ligne
             val RefScore = database.child("Scores").child(userId)
             RefScore.child("score").get().addOnSuccessListener {
-                if (it.value.toString().toInt() < cpt ){
+                if (it.value != null){
+                     if (it.value.toString().toInt() < cpt) {
+                         RefScore.setValue(NewScore)
+                     }
+                }
+                else{
                     RefScore.setValue(NewScore)
                 }
             }
