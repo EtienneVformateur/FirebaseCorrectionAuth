@@ -6,12 +6,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.iid.FirebaseInstanceIdReceiver
-import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -38,23 +35,34 @@ class MainActivity : AppCompatActivity() {
             startActivity(ForgotIntent)
         }
 
-        //Connection à mon compte créé sur la page register
+        //Connexion à mon compte créé sur la page register
         btConnect.setOnClickListener {
             val email = etEmail.text.toString()
             val password = etPassword.text.toString()
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        Toast.makeText(baseContext, "Connexion réussite",
-                            Toast.LENGTH_SHORT).show()
-                        val AccueilIntent = Intent(this,AccueilActivity::class.java)
-                        startActivity(AccueilIntent)
-                    } else {
-                        Toast.makeText(baseContext, "Erreur de connexion",
-                            Toast.LENGTH_SHORT).show()
+            if ((email.isNotEmpty()) and (password.isNotEmpty())) { //etEmail.text.isNotEmpty
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(
+                                baseContext, "Connexion réussite",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            val AccueilIntent = Intent(this, AccueilActivity::class.java)
+                            startActivity(AccueilIntent)
+                        } else {
+                            Toast.makeText(
+                                baseContext, "Erreur de connexion",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-                }
-
+            }
+            else{
+                Toast.makeText(
+                    baseContext, "Veuillez remplir tous les champs",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
