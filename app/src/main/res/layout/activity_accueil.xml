@@ -17,13 +17,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="#F44336" />
 
-    <TextView
-        android:id="@+id/TVEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
     <Button
         android:id="@+id/btQuizz"
         android:layout_width="match_parent"
@@ -39,9 +32,22 @@
         android:text="Envoyer mail de vérification" />
 
     <Button
+        android:id="@+id/btProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Profile" />
+
+    <Button
         android:id="@+id/BTDeconnexion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#F44336"
         android:text="Déconnexion" />
+
+    <TextView
+        android:id="@+id/TVEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 </LinearLayout>

@@ -35,7 +35,7 @@ class QuizzActivity : AppCompatActivity() {
     )
 
     class Score(
-//        val username: String,
+        val username: String,
 //        val userId: String, // Identifiant unique de l'user connecté
         val score: Int //Le compteur de bonne réponse va être stocker dans cette variable
     )
@@ -63,7 +63,8 @@ class QuizzActivity : AppCompatActivity() {
         else {
             val currentUser = auth.currentUser
             val userId = currentUser!!.uid
-            val NewScore = Score(cpt)
+            val username = currentUser.displayName.toString()
+            val NewScore = Score(username,cpt)
 
             //ecriture des données en ligne
             val RefScore = database.child("Scores").child(userId)

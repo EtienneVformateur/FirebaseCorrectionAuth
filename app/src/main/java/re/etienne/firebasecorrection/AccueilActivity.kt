@@ -24,15 +24,26 @@ class AccueilActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_accueil)
         val btDeconnexion = findViewById<Button>(R.id.BTDeconnexion)
+        val btProfile = findViewById<Button>(R.id.btProfile)
         val tvEmail = findViewById<TextView>(R.id.TVEmail)
         val tvVerifMail = findViewById<TextView>(R.id.TVVerifmail)
         val btVerifEmail = findViewById<Button>(R.id.BTVerifMail)
 
         auth = Firebase.auth
         val user = auth.currentUser
-        val token = FirebaseMessaging.getInstance().token
+        if (user == null){
+            val MainIntent = Intent(this,MainActivity::class.java)
+            startActivity(MainIntent)
+        }
 
-        tvEmail.text = token.toString()
+        if(user!!.displayName.isNullOrEmpty()) {
+            val ProfileIntent = Intent(this,ProfileActivity::class.java)
+            startActivity(ProfileIntent)
+
+        }
+        else{
+            tvEmail.text = user.displayName
+        }
 
 
         if (user!!.isEmailVerified) {
@@ -46,6 +57,10 @@ class AccueilActivity : AppCompatActivity() {
             startActivity(ConnexionIntent)
         }
 
+        btProfile.setOnClickListener {
+            val ProfileIntent = Intent(this,ProfileActivity::class.java)
+            startActivity(ProfileIntent)
+        }
         btVerifEmail.setOnClickListener {
             user.sendEmailVerification()
                 .addOnCompleteListener { task ->
