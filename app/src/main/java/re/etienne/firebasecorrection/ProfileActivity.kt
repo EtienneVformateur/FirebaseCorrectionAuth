@@ -10,7 +10,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 import re.etienne.firebasecorrection.databinding.ActivityProfileBinding
-import re.etienne.firebasecorrection.databinding.ActivityQuizzBinding
+
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth

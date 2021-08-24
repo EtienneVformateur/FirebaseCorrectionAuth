@@ -8,6 +8,12 @@
     android:orientation="vertical"
     tools:context=".AccueilActivity">
 
+    <ImageView
+        android:id="@+id/IVAvatar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:mipmap/sym_def_app_icon" />
+
     <TextView
         android:id="@+id/TVVerifmail"
         android:layout_width="match_parent"
@@ -36,6 +42,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Profile" />
+
+    <Button
+        android:id="@+id/BTUpdateImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Image" />
 
     <Button
         android:id="@+id/BTDeconnexion"
