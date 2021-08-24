@@ -2,6 +2,7 @@ package re.etienne.firebasecorrection
 
 import android.app.Activity
 import android.content.Intent
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -9,12 +10,10 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 
@@ -38,6 +37,14 @@ class AccueilActivity : AppCompatActivity() {
         val btVerifEmail = findViewById<Button>(R.id.BTVerifMail)
         val btUpdateImage = findViewById<Button>(R.id.BTUpdateImage)
         storage = Firebase.storage
+        val storageRef = storage.reference
+        val pathReference = storageRef.child("images/2813393")
+        val imageView = findViewById<ImageView>(R.id.IVAvatar)
+        Glide.with(this /* context */)
+            .load(pathReference)
+            .sizeMultiplier(0.5F)
+            .into(imageView)
+
 
         btUpdateImage.setOnClickListener {
                 val intent = Intent(Intent.ACTION_PICK)
@@ -58,9 +65,7 @@ class AccueilActivity : AppCompatActivity() {
 
         }
         else{
-//            tvEmail.text = user.displayName
-            tvEmail.text =
-                storage.getReferenceFromUrl("gs://fir-correction.appspot.com/images/2813393").toString()
+            tvEmail.text = user.displayName
         }
 
 
@@ -99,7 +104,6 @@ class AccueilActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-//        val ivAvatar = findViewById<ImageView>(R.id.IVAvatar)
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
             val uriImage = data?.data
             val storageRef = storage.reference
