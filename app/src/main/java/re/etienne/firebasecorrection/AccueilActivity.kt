@@ -15,9 +15,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 
 class AccueilActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    lateinit var storage: FirebaseStorage
     val REQUEST_CODE = 100
 
     fun demarreQuizz(view: View){
@@ -34,7 +37,7 @@ class AccueilActivity : AppCompatActivity() {
         val tvVerifMail = findViewById<TextView>(R.id.TVVerifmail)
         val btVerifEmail = findViewById<Button>(R.id.BTVerifMail)
         val btUpdateImage = findViewById<Button>(R.id.BTUpdateImage)
-
+        storage = Firebase.storage
 
         btUpdateImage.setOnClickListener {
                 val intent = Intent(Intent.ACTION_PICK)
@@ -55,7 +58,9 @@ class AccueilActivity : AppCompatActivity() {
 
         }
         else{
-            tvEmail.text = user.displayName
+//            tvEmail.text = user.displayName
+            tvEmail.text =
+                storage.getReferenceFromUrl("gs://fir-correction.appspot.com/images/2813393").toString()
         }
 
 
@@ -94,9 +99,26 @@ class AccueilActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val ivAvatar = findViewById<ImageView>(R.id.IVAvatar)
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE){
-            ivAvatar.setImageURI(data?.data) // handle chosen image --> URI De l'image dans data?.data
+//        val ivAvatar = findViewById<ImageView>(R.id.IVAvatar)
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
+            val uriImage = data?.data
+            val storageRef = storage.reference
+            val uploadTask = storageRef.child("images/${uriImage?.lastPathSegment}")
+                .putFile(uriImage!!)
+            uploadTask.addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(
+                        baseContext, "Connexion réussite",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        baseContext, "Erreur de connexion",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+//            ivAvatar.setImageURI(data?.data) // handle chosen image --> URI De l'image dans data?.data
+            }
         }
     }
 
