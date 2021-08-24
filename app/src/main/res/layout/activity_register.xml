@@ -9,6 +9,33 @@
     tools:context=".RegisterActivity">
 
     <EditText
+        android:id="@+id/ETRNom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Entrez votre nom"
+        android:inputType="textPersonName"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/ETRPrenom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Entrez votre prenom"
+        android:inputType="textPersonName"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/ETRPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Entrez votre numéro"
+        android:ems="10"
+        android:inputType="phone"
+        android:minHeight="48dp"/>
+
+    <EditText
         android:id="@+id/ETREmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

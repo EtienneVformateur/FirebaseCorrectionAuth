@@ -8,10 +8,13 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -19,14 +22,30 @@ class RegisterActivity : AppCompatActivity() {
         val etPassword1 = findViewById<EditText>(R.id.ETRPassword1)
         val etPassword2 = findViewById<EditText>(R.id.ETRPassword2)
         val btRegister = findViewById<Button>(R.id.BTRRegister)
+        val etPhone = findViewById<EditText>(R.id.ETRPhone)
+        val etNom = findViewById<EditText>(R.id.ETRNom)
+        val etPrenom = findViewById<EditText>(R.id.ETRPrenom)
+
 
         auth = Firebase.auth
+        database = Firebase.database("https://fir-correction-default-rtdb.europe-west1.firebasedatabase.app/").reference
+
         //Créer un compte utilisateur
         btRegister.setOnClickListener {
             val email  = etEmail.text.toString()
             val password = etPassword1.text.toString()
             val password2 = etPassword2.text.toString()
-            if (password != password2) //and ()
+            val nom = etNom.text.toString()
+            val prenom = etPrenom.text.toString()
+            val phone = etPhone.text.toString()
+            if (email.isEmpty() or password.isEmpty() or password2.isEmpty()
+            or nom.isEmpty() or prenom.isEmpty() or phone.isEmpty()){
+                Toast.makeText(
+                    baseContext, "Veuillez remplir toutes les champs",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            else if (password != password2) //and ()
             {
                 Toast.makeText(
                     baseContext, "Les mots de passe ne correspondent pas",
@@ -52,6 +71,10 @@ class RegisterActivity : AppCompatActivity() {
                                         ).show()
                                     }
                                 }
+                            val userId = user.uid
+                            val newUser = User(nom,prenom,phone)
+                            val RefUid = database.child("users").child(userId)
+                            RefUid.setValue(newUser)
                             val ConnexionIntent = Intent(this,MainActivity::class.java)
                             startActivity(ConnexionIntent)
                         } else {
